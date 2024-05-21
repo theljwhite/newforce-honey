@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getStaffUsers } from "../../services/userService";
+import { Link } from "react-router-dom";
 import Employee from "./Employee";
 
 export default function EmployeeList() {
@@ -15,9 +16,13 @@ export default function EmployeeList() {
   };
 
   return (
-    <div className="customers">
+    <div className="employees">
       {employees.map((employee) => {
-        return <Employee key={employee.id} employee={employee} />;
+        return (
+          <Link key={employee.id} to={`/employees/${employee.id}`}>
+            <Employee key={employee.id} employee={employee} />
+          </Link>
+        );
       })}
     </div>
   );
