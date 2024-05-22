@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { getAllExployees } from "../../services/employeesService";
+import {
+  assignEmployeeTicket,
+  updateTicket,
+} from "../../services/ticketService";
 
-export default function Ticket({ ticket }) {
+export default function Ticket({ ticket, currentUser, callGetTickets }) {
   const [employees, setEmployees] = useState([]);
   const [assignedEmployee, setAssignedEmployee] = useState({});
 
@@ -11,7 +15,7 @@ export default function Ticket({ ticket }) {
 
   useEffect(() => {
     const foundEmployee = employees.find(
-      (employee) => employee.id === ticket?.employeeTicket[0]?.employeeId
+      (employee) => employee.id === ticket?.employeeTickets[0]?.employeeId
     );
     setAssignedEmployee(foundEmployee);
   }, [employees, ticket]);
@@ -19,6 +23,28 @@ export default function Ticket({ ticket }) {
   const callGetAllEmployees = async () => {
     const employees = await getAllExployees();
     setEmployees(employees);
+  };
+
+  const handleClaim = async () => {
+    const currentEmployee = employees.find(
+      (employee) => employee.userId === currentUser.id
+    );
+    const newEmployeeTicket = {
+      employeeId: currentEmployee.id,
+      serviceTicketId: ticket.id,
+    };
+
+    await assignEmployeeTicket(newEmployeeTicket);
+    await callGetTickets();
+  };
+
+  const handleClose = async () => {
+    const closedTicket = {
+      ...ticket,
+      dateCompleted: new Date(),
+    };
+    await updateTicket(closedTicket);
+    await callGetTickets();
   };
 
   return (
@@ -32,6 +58,20 @@ export default function Ticket({ ticket }) {
           </div>
           <div className="ticket-info">emergency</div>
           <div>{ticket.emergency ? "yes" : "no"}</div>
+        </div>
+        <div className="btn-container">
+          {currentUser.isStaff && !assignedEmployee && (
+            <button onClick={handleClaim} className="btn btn-secondary">
+              Claim
+            </button>
+          )}
+
+          {assignedEmployee?.userId === currentUser.id &&
+            !ticket.dateCompleted && (
+              <button onClick={handleClose} className="btn btn-warning">
+                Close
+              </button>
+            )}
         </div>
       </footer>
     </section>

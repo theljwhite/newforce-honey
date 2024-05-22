@@ -7,9 +7,10 @@ import Navbar from "../components/nav/Navbar";
 import Welcome from "../components/welcome/Welcome";
 import CustomerDetails from "../components/customers/CustomerDetails";
 import EmployeeDetails from "../components/employees/EmployeeDetails";
+import EmployeeForm from "../components/forms/EmployeeForm";
 
 export const ApplicationViews = () => {
-  const [_, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
     const localHoneyUser = localStorage.getItem("honey_user");
@@ -29,7 +30,10 @@ export const ApplicationViews = () => {
         }
       >
         <Route index element={<Welcome />} />
-        <Route path="tickets" element={<TicketList />} />
+        <Route
+          path="tickets"
+          element={<TicketList currentUser={currentUser} />}
+        />
         <Route path="customers">
           <Route index element={<CustomersList />} />
           <Route path=":customerId" element={<CustomerDetails />} />
@@ -38,6 +42,10 @@ export const ApplicationViews = () => {
           <Route index element={<EmployeeList />} />
           <Route path=":employeeId" element={<EmployeeDetails />} />
         </Route>
+        <Route
+          path="profile"
+          element={<EmployeeForm currentUser={currentUser} />}
+        />
       </Route>
     </Routes>
   );

@@ -4,7 +4,7 @@ import Ticket from "./Ticket";
 import "./Ticket.css";
 import TicketFilter from "./TicketFilter";
 
-export const TicketList = () => {
+export const TicketList = ({ currentUser }) => {
   const [allTickets, setAllTickets] = useState([]);
   const [showEmergencyOnly, setShowEmergencyOnly] = useState(false);
   const [filteredTickets, setFilteredTickets] = useState([]);
@@ -26,10 +26,10 @@ export const TicketList = () => {
   }, [showEmergencyOnly, allTickets]);
 
   useEffect(() => {
-    const foundTickers = allTickets.filter((ticket) =>
+    const foundTickets = allTickets.filter((ticket) =>
       ticket.description.toLowerCase().includes(searchEntry.toLowerCase())
     );
-    setFilteredTickets(foundTickers);
+    setFilteredTickets(foundTickets);
   }, [searchEntry, allTickets]);
 
   const callGetTickets = async () => {
@@ -48,7 +48,14 @@ export const TicketList = () => {
         />
         <article className="tickets">
           {filteredTickets.map((ticket) => {
-            return <Ticket key={ticket.id} ticket={ticket} />;
+            return (
+              <Ticket
+                key={ticket.id}
+                ticket={ticket}
+                currentUser={currentUser}
+                callGetTickets={callGetTickets}
+              />
+            );
           })}
         </article>
       </div>
