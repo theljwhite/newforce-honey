@@ -35,3 +35,27 @@ export const updateTicket = async (ticket) => {
     return null;
   }
 };
+
+export const deleteTicket = async (ticketId) => {
+  try {
+    await fetch(`http://localhost:8088/serviceTickets/${ticketId}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    return null;
+  }
+};
+
+export const createTicket = async (ticket) => {
+  try {
+    await fetch("http://localhost:8088/serviceTickets", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ticket),
+    });
+  } catch (error) {
+    return null;
+  }
+};

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./Nav.css";
 
-export default function Navbar() {
+export default function EmployeeNav() {
   const navigate = useNavigate();
 
   return (

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllExployees } from "../../services/employeesService";
 import {
   assignEmployeeTicket,
+  deleteTicket,
   updateTicket,
 } from "../../services/ticketService";
 
@@ -47,6 +48,11 @@ export default function Ticket({ ticket, currentUser, callGetTickets }) {
     await callGetTickets();
   };
 
+  const handleDelete = async () => {
+    await deleteTicket(ticket.id);
+    await callGetTickets();
+  };
+
   return (
     <section className="ticket">
       <header className="ticket-info">#{ticket.id}</header>
@@ -72,6 +78,11 @@ export default function Ticket({ ticket, currentUser, callGetTickets }) {
                 Close
               </button>
             )}
+          {!currentUser.isStaff && (
+            <button onClick={handleDelete} className="btn btn-warning">
+              Delete
+            </button>
+          )}
         </div>
       </footer>
     </section>

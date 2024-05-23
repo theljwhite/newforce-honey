@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
-import { TicketList } from "../components/tickets/TicketList";
-import CustomersList from "../components/customers/CustomersList";
-import EmployeeList from "../components/employees/EmployeeList";
-import Navbar from "../components/nav/Navbar";
-import Welcome from "../components/welcome/Welcome";
-import CustomerDetails from "../components/customers/CustomerDetails";
-import EmployeeDetails from "../components/employees/EmployeeDetails";
-import EmployeeForm from "../components/forms/EmployeeForm";
+import { EmployeeViews } from "./EmployeeViews";
+import { CustomerViews } from "./CustomerViews";
 
 export const ApplicationViews = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -18,35 +11,9 @@ export const ApplicationViews = () => {
     setCurrentUser(honeyUser);
   }, []);
 
-  return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <>
-            <Navbar />
-            <Outlet />
-          </>
-        }
-      >
-        <Route index element={<Welcome />} />
-        <Route
-          path="tickets"
-          element={<TicketList currentUser={currentUser} />}
-        />
-        <Route path="customers">
-          <Route index element={<CustomersList />} />
-          <Route path=":customerId" element={<CustomerDetails />} />
-        </Route>
-        <Route path="employees">
-          <Route index element={<EmployeeList />} />
-          <Route path=":employeeId" element={<EmployeeDetails />} />
-        </Route>
-        <Route
-          path="profile"
-          element={<EmployeeForm currentUser={currentUser} />}
-        />
-      </Route>
-    </Routes>
+  return currentUser.isStaff ? (
+    <EmployeeViews currentUser={currentUser} />
+  ) : (
+    <CustomerViews currentUser={currentUser} />
   );
 };
